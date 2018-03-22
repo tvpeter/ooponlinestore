@@ -1,3 +1,4 @@
 <?php
 
-require 'views/admin/register.php';
+
+require 'views/admin/register.view.php';

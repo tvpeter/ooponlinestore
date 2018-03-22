@@ -10,3 +10,6 @@ $router->get('product', 'controllers/public/product.php');
 $router->get('login', 'controllers/admin/login.php');
 $router->get('error', 'controllers/public/error.php');
 $router->get('register', 'controllers/admin/register.php');
+$router->post('processreg', 'controllers/admin/registeradmin.php');
+$router->post('processlogin', 'controllers/admin/logincheck.php');
+

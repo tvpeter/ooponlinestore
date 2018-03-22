@@ -2,11 +2,10 @@
 www/ass/
 www/assets/
 www/images/
-www/core/database/
-www/views/admin/
-www/views/public/
 default
 Vagrantfile
 www.conf
 provision.sh
+www/config.php
+*.html
 
