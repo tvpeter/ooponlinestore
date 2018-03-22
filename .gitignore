@@ -6,5 +6,9 @@ default
 Vagrantfile
 www.conf
 provision.sh
+config.php
 *.html
+www/config.php
+config.php
+
 

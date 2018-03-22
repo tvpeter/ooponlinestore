@@ -35,11 +35,11 @@ class QueryMaster
 	}
 
 
-	public function checkIfExists($col, $val)
+	public function checkIfExists($col, $tablename, $val)
 	{
 		$result = false;
 	try{
-		  $stmt = $this->link->prepare("SELECT {$col} FROM users WHERE {$col}=:val");
+		  $stmt = $this->link->prepare("SELECT {$col} FROM {$tablename} WHERE {$col}=:val");
 
 		  	 $stmt ->bindParam(":val", $val);
 
@@ -85,6 +85,39 @@ class QueryMaster
 		  return $result;
 	}
 
+
+	public function addCategory($categoryName)
+	{
+
+		$rs = false;
+
+		try {
+
+			$statement = $this->link->prepare("INSERT INTO majorCategory (categoryName) VALUES (:cat)");
+
+			$statement->bindParam(':cat', $categoryName);
+
+			if ($statement->execute()) {
+				
+				$rs = true;
+			}
+			
+		} catch (Exception $e) {
+			die($e->getMessage());
+		}
+
+		return $rs;
+
+	}
+
+	public function selectAll($table)
+    {
+      $statement = $this->link->prepare("select * from {$table}");
+
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_CLASS);
+    }
 
 
 }

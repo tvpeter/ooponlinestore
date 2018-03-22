@@ -34,7 +34,7 @@
                                 <input type="checkbox"> Agree the terms and policy
                             </label>
                         </div> -->
-                        <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Register</button>
+                        <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30" name="register">Register</button>
                        <div class="register-link m-t-15 text-center">
                             <p>Already have account ? <a href="/login"> Sign in</a></p>
                         </div>
