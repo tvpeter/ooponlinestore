@@ -9,32 +9,6 @@ class QueryMaster
 	}
 
 
-	public function registerStaff($staffDetails)
-	{
-		$encrypt = password_hash($staffDetails['password'], PASSWORD_BCRYPT);
-
-		try{
-
-		$stmt = $this->link->prepare("INSERT INTO users (username, email, password, hash) 
-			VALUES (:username, :email, :password, :encrypt)");
-
-		$data = [
-			":username" => $staffDetails['username'],
-			":email" => $staffDetails['email'],
-			":password" => $staffDetails['password'],
-			":encrypt" => $encrypt
-		];
-
-			$stmt -> execute($data);
-
-		} catch(Exception $e)
-		{
-			die($e->getMessage());
-			//header("Location: /register");
-		}
-	}
-
-
 	public function checkIfExists($col, $tablename, $val)
 	{
 		$result = false;
@@ -86,29 +60,26 @@ class QueryMaster
 	}
 
 
-	public function addCategory($categoryName)
-	{
+	public function dbInsert($table, $parameters)
+    {
+        $sql = sprintf(
+          'insert into %s (%s) values (%s)',
+          $table,
+          implode(',', array_keys($parameters)),
+          ':' .implode(', :', array_keys($parameters))
+        );
 
-		$rs = false;
+        try {
+          $statement = $this->link->prepare($sql);
 
-		try {
+          $statement ->execute($parameters);
 
-			$statement = $this->link->prepare("INSERT INTO majorCategory (categoryName) VALUES (:cat)");
+        } catch (Exception $e) {
+          die($e->getMessage());
+        }
 
-			$statement->bindParam(':cat', $categoryName);
 
-			if ($statement->execute()) {
-				
-				$rs = true;
-			}
-			
-		} catch (Exception $e) {
-			die($e->getMessage());
-		}
-
-		return $rs;
-
-	}
+    }
 
 	public function selectAll($table)
     {
@@ -118,6 +89,32 @@ class QueryMaster
 
         return $statement->fetchAll(PDO::FETCH_CLASS);
     }
+
+  public function getCategoryById($id)
+{
+  $result = " ";
+  $stmt = $this->link->prepare("SELECT * FROM majorCategory WHERE id= :catId");
+  $stmt ->bindParam(':catId', $id);
+  $stmt ->execute();
+  $result = $stmt->fetch(PDO::FETCH_BOTH);
+  return $result;
+}
+
+public function uploadFile($files, $name, $loc)
+{
+$result = [];
+$rnd = rand(0000000000, 9999999999);
+  $strip_name = str_replace(' ', '_', $files[$name]['name']);
+  $filename = $rnd.$strip_name;
+  $destination = $loc.$filename;
+
+  if (!move_uploaded_file($files[$name]['tmp_name'], $destination)) {
+    $result [] = false;
+  }else {    $result [] = true;
+    $result [] = $destination;
+  }
+  return $result;
+}
 
 
 }

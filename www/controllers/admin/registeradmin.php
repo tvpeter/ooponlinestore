@@ -6,6 +6,7 @@
 		$email = $app['database']->checkIfExists('email', 'users', $_POST['email']);
 		$username = $app['database']->checkIfExists('username', 'users', $_POST['username']);
 
+		
 		if ($username) {
 
 			$error = "username already exist";
@@ -27,12 +28,14 @@
 		}
 
 		else{
+			$encrypt = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-				 $app['database'] ->registerStaff([
-
+				$app['database']->dbInsert('users',
+				[
 					"username" => $_POST['username'],
 					"email" => $_POST['email'],
-					"password" => $_POST['password']
+					"password" => $_POST['password'],
+					"hash"=>$encrypt
 				]);
 
 				header("Location: /login");
@@ -52,13 +55,41 @@ if (array_key_exists('addcategory', $_POST)) {
 
 	}else{
 
-		$app['database']->addCategory(
-			strtoupper($_POST['category'])
-		);
+		$app['database']->dbInsert('majorCategory', [
+
+			"categoryName" => strtoupper($_POST['category'])
+			]);
+
+		 header("Location: /admin");
+
+	}
+
+}
+
+
+
+if (array_key_exists('csubcat', $_POST)) 
+{
+	$subcat = $app['database']->checkIfExists('subcat', 'subcategory', $_POST['subcatname']);
+	
+	if ($subcat) {
+
+		$error = "sub category  name already exist";
+
+		require 'views/admin/addcategory.view.php';
+
+	}else{
+
+		$app['database']->dbInsert('subcategory', [
+
+			"mcatid" => $_POST['majorcategory'],
+			"subcat" => $_POST['subcatname']
+		]);
 
 		header("Location: /admin");
 
 	}
+
 
 }
 
